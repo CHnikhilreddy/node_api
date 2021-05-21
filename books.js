@@ -17,11 +17,8 @@ const remove = async (id_) => {
 
 const list = async () => {
     console.log("hi hello")
-    var cursor = await collection.find().toArray()
-    while(cursor.hasNext()){
-        console.log(cursor.next())
-    }
-    console.log(cursor.next())
+    var cursor = await collection.find({}).toArray().then((data)=>data,(error)=>"error")
+    console.log(cursor)
     client.close()
 }
 
