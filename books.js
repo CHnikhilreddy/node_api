@@ -3,23 +3,75 @@ const client = require('./db')
 const db = client.db('itcdb_new');
 const collection = db.collection('book');
 
-const add = async (book) => {
-    await collection.insertOne(book)
-    client.close()
+const add = (book) => {
+    return new Promise(async (resolve,reject)=>{
+        try{
+            await collection.insertOne(book)
+            resolve("hello")
+        }catch(e){
+            reject("error")
+        }finally{
+            client.close()
+        }
+    })
 }
+
 
 const remove = async (id_) => {
-    console.log(id_);
-    await collection.remove({id:{$eq:id_}},true)  
-    client.close()  
+    return new Promise(async (resolve,reject)=>{
+        try{
+            await collection.deleteOne({id:{$eq:+id_}},true)
+            resolve("h")  
+        }catch(e){
+            reject("error")
+        }finally{
+            client.close()
+    }
+    })
 }
 
 
-const list = async () => {
-    console.log("hi hello")
-    var cursor = await collection.find({}).toArray().then((data)=>data,(error)=>"error")
-    console.log(cursor)
-    client.close()
+const list =  () => {
+    return new Promise(async (resolve,reject)=>{
+        try{
+            resolve(await collection.find().toArray())  
+        }catch(e){
+            reject("error")
+        }finally{
+            // client.close()
+        }
+    })
 }
 
-module.exports = {add,remove,list}
+const filter = (title) => {
+    return new Promise(async (resolve,reject)=>{
+        try{
+            var arr = await collection.findOne({id : {$eq : +title}})//.toArray()
+            resolve(arr)  
+        }catch(e){
+            reject("error")
+        }finally{
+            client.close()
+        }
+    })
+}
+const find_filter = (id) => {
+    return new Promise(async (resolve,reject)=>{
+        try{
+            console.log(id)
+            var arr = await collection.findOne({id : id},true).toArray()
+            console.log(arr)
+            resolve(arr)  
+        }catch(e){
+            reject("error")
+        }finally{
+            client.close()
+        }
+    })
+}
+const edit = (book) =>{
+    console.log(book)
+    return collection.updateOne({id:{$eq:book.id}},{$set:{title:book.title}})
+}
+
+module.exports = {add,remove,list,filter,edit,find_filter}
