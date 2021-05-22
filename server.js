@@ -15,14 +15,21 @@ app.use(express.json())
 // app.use((bodyParser.json)=>{})
 
 app.get('/books',(req,res)=>{
-    let some = book.list()
+    let some = book.list({})
     .then((data)=>{res.send(data)},
             (e)=>{console.log("error in get books")})
 
 })
-app.get('/books/:id',(req,res)=>{
-    book.filter(req.params.id).then((data)=>{res.send(data)},(e)=>{res.send("error in get ")})
+app.get('/books/:cat',(req,res)=>{
+    let some = book.list({category : {$eq :req.params.cat}})
+    .then((data)=>{res.send(data)},
+            (e)=>{console.log("error in get books")})
+
 })
+
+// app.get('/books/:id',(req,res)=>{
+//     book.filter(req.params.id).then((data)=>{res.send(data)},(e)=>{res.send("error in get ")})
+// })
 app.post('/books',(req,res)=>{
     console.log(req.body)
     book.add(req.body)

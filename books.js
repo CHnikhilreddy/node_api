@@ -27,10 +27,10 @@ const remove = async (id_) => {
 }
 
 
-const list =  () => {
+const list =  (q) => {
     return new Promise(async (resolve,reject)=>{
         try{
-            resolve(await collection.find().toArray())  
+            resolve(await collection.find(q).toArray())  
         }catch(e){
             reject("error")
         }
@@ -61,7 +61,13 @@ const find_filter = (id) => {
 }
 const edit = (book) =>{
     console.log(book)
-    return collection.updateOne({id:{$eq:+book.id}},{$set:{title:book.title}})
+    return collection.updateOne({id:{$eq:+book.id}},
+        {$set:
+            {title:book.title,
+            category:book.category,
+            date:book.date,
+            cost:book.cost}
+        })
 }
 
 module.exports = {add,remove,list,filter,edit,find_filter}
