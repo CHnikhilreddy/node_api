@@ -10,8 +10,6 @@ const add = (book) => {
             resolve("hello")
         }catch(e){
             reject("error")
-        }finally{
-            client.close()
         }
     })
 }
@@ -24,9 +22,7 @@ const remove = async (id_) => {
             resolve("h")  
         }catch(e){
             reject("error")
-        }finally{
-            client.close()
-    }
+        }
     })
 }
 
@@ -37,8 +33,6 @@ const list =  () => {
             resolve(await collection.find().toArray())  
         }catch(e){
             reject("error")
-        }finally{
-            // client.close()
         }
     })
 }
@@ -46,12 +40,10 @@ const list =  () => {
 const filter = (title) => {
     return new Promise(async (resolve,reject)=>{
         try{
-            var arr = await collection.findOne({id : {$eq : +title}})//.toArray()
+            var arr = await collection.findOne({id : {$eq : title}})//.toArray()
             resolve(arr)  
         }catch(e){
             reject("error")
-        }finally{
-            client.close()
         }
     })
 }
@@ -64,14 +56,12 @@ const find_filter = (id) => {
             resolve(arr)  
         }catch(e){
             reject("error")
-        }finally{
-            client.close()
         }
     })
 }
 const edit = (book) =>{
     console.log(book)
-    return collection.updateOne({id:{$eq:book.id}},{$set:{title:book.title}})
+    return collection.updateOne({id:{$eq:+book.id}},{$set:{title:book.title}})
 }
 
 module.exports = {add,remove,list,filter,edit,find_filter}
